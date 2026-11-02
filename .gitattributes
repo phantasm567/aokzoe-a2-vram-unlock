@@ -1,0 +1,4 @@
+*.nsh -text
+*.txt -text
+*.efi binary
+*.EFI binary
