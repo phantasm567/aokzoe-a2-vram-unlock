@@ -1,0 +1,45 @@
+AOKZOE A2 (7840U), BIOS 1.16: настоящее меню AMD CBS с флешки (без прошивки BIOS). БЕТА.
+
+Что это
+  menu.nsh запускает UniversalAMDFormBrowser (Smokeless_UMAF, beta для Ryzen 7000).
+  Он открывает скрытые разделы AMD CBS / AMD PBS из твоего же BIOS. BIOS не меняется,
+  меняются только сохранённые настройки (как при обычном Save в BIOS).
+  Перед этим menu.nsh ставит CMOS 0x7A = 01: тогда код AOKZOE не перебивает
+  объём, выбранный в меню AMD CBS.
+
+Подготовка один раз (программы меню здесь нет: у неё нет лицензии на распространение)
+  а. Скачай UMAF_BETA.zip: https://github.com/DavidS95/Smokeless_UMAF/blob/main/UMAF_BETA.zip
+  б. Скопируй из него в корень флешки: DisplayEngine.efi, Loader.efi, SetupBrowser.efi,
+     SREP_Config.cfg, SuppressIFPatcher.efi, UiApp.efi
+  в. Его EFI/Boot/BOOTX64.efi скопируй в корень флешки и переименуй в amd_menu.efi.
+     НЕ заменяй EFI/BOOT/BOOTX64.EFI этого набора (это UEFI Shell).
+
+Как пользоваться
+  1. Secure Boot выключен, флешка FAT32, файлы в корне (как раньше).
+  2. Загрузись с флешки, в консоли набери:  menu.nsh
+  3. Откроется меню. Иди: Device Manager -> AMD CBS -> NBIO Common Options -> GFX Configuration
+       iGPU Configuration      = UMA_SPECIFIED
+       UMA Frame buffer Size   = нужный объём (в списке: ... 4G, 5G, 6G, 8G, 16G)
+  4. Сохрани: F10, затем Y (или Esc и на вопрос о сохранении ответь Y).
+  5. Выйди на главный экран меню и выбери Reset. Флешку вытащи.
+  6. Приставка может перезагрузиться сама 1-2 раза: BIOS применяет новый объём.
+  7. Проверь «Выделенная память GPU» в Диспетчере задач. Если объём не поменялся,
+     перезагрузи ещё раз.
+
+ВАЖНО
+  - Это бета, на AOKZOE A2 ещё не проверено. Я проверил только запуск в виртуальной машине.
+  - Меняй ТОЛЬКО GFX Configuration. Остальные пункты AMD CBS/PBS (питание, память,
+    напряжения) - это реальные настройки, неправильные значения могут привести
+    к тому, что приставка не включится.
+  - 10, 12 и 14 ГБ в меню AMD нет. Для них используй vram_10g.nsh / vram_12g.nsh / vram_14g.nsh.
+  - Любой vram_*.nsh возвращает обычный режим (CMOS задаёт объём сам), меню тогда не нужно.
+
+Если не сработало или что-то пошло не так
+  - Объём не меняется: загрузись с флешки и запусти vram_8g.nsh (проверенный способ).
+  - Пропал логотип AOKZOE: DEL -> Boot -> Quiet Boot = Enabled (или F9 Load Defaults) -> Save & Exit.
+  - Вернуть всё к заводскому: vram_auto.nsh, затем в BIOS F9 (Load Defaults) -> Save & Exit.
+  - Если меню не открылось (зависание, чёрный экран): долгое нажатие питания,
+    загрузись с флешки и запусти vram_8g.nsh или vram_auto.nsh.
+
+Автор браузера меню: Smokeless (DavidS95/Smokeless_UMAF), сборка XUANHLGG/UniversalAMDFormBrowser-Ventoy-Ryzen7000.
+Скрипты: сделано с помощью Devin.

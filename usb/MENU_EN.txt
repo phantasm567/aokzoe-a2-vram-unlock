@@ -1,0 +1,43 @@
+AOKZOE A2 (7840U), BIOS 1.16: the real AMD CBS menu from a USB stick (no BIOS flashing). BETA.
+
+What it is
+  menu.nsh starts UniversalAMDFormBrowser (Smokeless_UMAF, Ryzen 7000 beta).
+  It shows the hidden AMD CBS / AMD PBS pages of your own BIOS. The BIOS itself is not
+  modified; only the saved settings change (like a normal Save in BIOS setup).
+  Before that, menu.nsh sets CMOS 0x7A = 01, so the AOKZOE code stops overriding
+  the size chosen in the AMD CBS menu.
+
+One-time setup (the menu program is NOT included here, it has no license for redistribution)
+  a. Download UMAF_BETA.zip: https://github.com/DavidS95/Smokeless_UMAF/blob/main/UMAF_BETA.zip
+  b. From it, copy to the USB root: DisplayEngine.efi, Loader.efi, SetupBrowser.efi,
+     SREP_Config.cfg, SuppressIFPatcher.efi, UiApp.efi
+  c. Copy its EFI/Boot/BOOTX64.efi to the USB root and rename it to amd_menu.efi.
+     Do NOT replace EFI/BOOT/BOOTX64.EFI of this kit (that is the UEFI Shell).
+
+How to use
+  1. Secure Boot off, FAT32 USB stick, files in the root (as before).
+  2. Boot from the USB stick and type:  menu.nsh
+  3. In the menu go to: Device Manager -> AMD CBS -> NBIO Common Options -> GFX Configuration
+       iGPU Configuration      = UMA_SPECIFIED
+       UMA Frame buffer Size   = the size you want (list: ... 4G, 5G, 6G, 8G, 16G)
+  4. Save: F10, then Y (or Esc and answer Y when asked to save).
+  5. Go back to the main menu screen and choose Reset. Remove the USB stick.
+  6. The console may reboot by itself 1-2 times while the BIOS applies the new size.
+  7. Check "Dedicated GPU memory" in Task Manager. If it did not change, reboot once more.
+
+IMPORTANT
+  - Beta, not yet tested on an AOKZOE A2. Only the launch was tested in a virtual machine.
+  - Change ONLY GFX Configuration. Other AMD CBS/PBS options (power, memory, voltages)
+    are real settings; wrong values can leave the console unable to boot.
+  - 10, 12 and 14 GB are not in the AMD menu. Use vram_10g.nsh / vram_12g.nsh / vram_14g.nsh.
+  - Any vram_*.nsh switches back to the normal mode (CMOS sets the size), no menu needed.
+
+If it does not work
+  - Size does not change: boot the USB stick and run vram_8g.nsh (the tested method).
+  - AOKZOE logo is gone: DEL -> Boot -> Quiet Boot = Enabled (or F9 Load Defaults) -> Save & Exit.
+  - Back to stock: vram_auto.nsh, then in BIOS F9 (Load Defaults) -> Save & Exit.
+  - Menu does not open (hang, black screen): hold power to turn off, boot the USB stick
+    and run vram_8g.nsh or vram_auto.nsh.
+
+Menu browser by Smokeless (DavidS95/Smokeless_UMAF), build from XUANHLGG/UniversalAMDFormBrowser-Ventoy-Ryzen7000.
+Scripts: made with the help of Devin.

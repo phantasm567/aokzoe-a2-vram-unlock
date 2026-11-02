@@ -74,6 +74,30 @@ mm 71 -IO -w 1 -n
 
 The last command should print `0x20`. Then run `reset`.
 
+## Beta: the real AMD CBS menu from the USB stick
+
+> **Beta, not yet tested on a physical AOKZOE A2.** Only the launch was tested in a virtual machine.
+> The CMOS scripts above are the tested method.
+
+`menu.nsh` sets CMOS `0x7A = 01` (so the AOKZOE code uses the AMD CBS value) and opens
+UniversalAMDFormBrowser by Smokeless ([DavidS95/Smokeless_UMAF](https://github.com/DavidS95/Smokeless_UMAF),
+Ryzen 7000 build: [XUANHLGG/UniversalAMDFormBrowser-Ventoy-Ryzen7000](https://github.com/XUANHLGG/UniversalAMDFormBrowser-Ventoy-Ryzen7000)).
+The BIOS is not flashed. The menu program is not included in this repo (no license for redistribution):
+
+1. Download [UMAF_BETA.zip](https://github.com/DavidS95/Smokeless_UMAF/blob/main/UMAF_BETA.zip).
+2. Copy `DisplayEngine.efi`, `Loader.efi`, `SetupBrowser.efi`, `SREP_Config.cfg`, `SuppressIFPatcher.efi`,
+   `UiApp.efi` to the USB root.
+3. Copy its `EFI/Boot/BOOTX64.efi` to the USB root as `amd_menu.efi`. Do **not** replace this kit's
+   `EFI/BOOT/BOOTX64.EFI` (the UEFI Shell).
+4. Boot the USB stick, type `menu.nsh`, then go to
+   **Device Manager → AMD CBS → NBIO Common Options → GFX Configuration**:
+   `iGPU Configuration = UMA_SPECIFIED`, `UMA Frame buffer Size` = the size you want.
+5. F10 → Y to save, then Reset. The console may reboot by itself 1–2 times.
+
+Change **only** GFX Configuration: other AMD CBS/PBS options are real settings and wrong values can
+stop the console from booting. 10/12/14 GB are not in the AMD menu, so use the `vram_*.nsh` scripts for those.
+Any `vram_*.nsh` script switches back to the normal CMOS mode. Details: `usb/MENU_EN.txt` / `usb/MENU_RU.txt`.
+
 ## How much VRAM to choose
 
 - **16 GB RAM:** up to 4-6 GB (factory is 6 GB).
